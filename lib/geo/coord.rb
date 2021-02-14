@@ -319,8 +319,21 @@ module Geo
     #    g = Geo::Coord.new(lat: 50.004444)
     #    # => #<Geo::Coord 50°0'16"N 0°0'0"W>
     #
-    def initialize(lat = nil, lng = nil, **opts)
+    def initialize(*args)
       @globe = Globes::Earth.instance
+
+      case args.length
+      when 1
+        opts = args[0]
+        lat = nil
+        lng = nil
+      when 2
+        opts = {}
+        lat = args[0]
+        lng = args[1]
+      else
+        raise ArgumentError, "Can't create #{self.class} by provided data"
+      end
 
       case
       when lat && lng
